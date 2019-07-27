@@ -40,12 +40,18 @@ namespace Api.Customer.Controllers
             return Ok(customer.Result);
         }
 
-        [HttpGet]
-        [Route("customerId/password")]
-        public ActionResult<string> GetWithValidatedPassword(int customerId, string password)
+        [HttpPost]
+        [Route("login")]
+        public ActionResult<string> CustomerLogin([FromBody] LoginCredentials customer)
         {
-            var myCustomer = _customerService.GetCustomerWithValidatedPassword(customerId, password);
+            var myCustomer = _customerService.GetCustomerWithValidatedPassword(customer.CustomerId, customer.Password);
             return Ok(myCustomer.Result);
+        }
+
+        public class LoginCredentials
+        {
+            public int CustomerId { get; set; }
+            public string Password { get; set; }
         }
 
     }
