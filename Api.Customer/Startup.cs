@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Api.Customer.Repository;
+using Api.Customer.Service;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +21,8 @@ namespace Api.Customer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            RegisterServices(services);
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSwaggerGen(options =>
@@ -45,6 +49,12 @@ namespace Api.Customer
             app.UseMvc();
         }
 
+        private void RegisterServices(IServiceCollection services)
+        {
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+        }
+
         private void ConfigSwagger(IApplicationBuilder app)
         {
             app.UseSwagger(options => { options.RouteTemplate = "swagger/{documentName}/swagger.json"; });
@@ -55,5 +65,6 @@ namespace Api.Customer
                     $"{Configuration["Name"]} {Configuration["Version"]}");
             });
         }
+
     }
 }

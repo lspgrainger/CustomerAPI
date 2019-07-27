@@ -4,10 +4,15 @@ namespace Api.Customer.Service
 {
     public class CustomerService:ICustomerService
     {
+        private readonly ICustomerRepository _customerRepository;
+
+        public CustomerService(ICustomerRepository customerRepository)
+        {
+            _customerRepository = customerRepository;
+        }
         public Domain.Customer GetCustomer(int customerId)
         {
-            var customerRepository = new CustomerRepository();
-            var customer = customerRepository.GetCustomer(customerId);
+            var customer = _customerRepository.GetCustomer(customerId);
             return customer;
         }
     }

@@ -6,7 +6,7 @@
         {
             var customer = new Domain.Customer
             {
-                CustomerId = 1, Forename = "Liam", Surname = "Grainger", Password = "Password1234"
+                CustomerId = customerId, Forename = "Liam", Surname = "Grainger", Password = "Password1234"
             };
 
             return customer;
