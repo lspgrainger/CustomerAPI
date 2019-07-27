@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Api.Customer.Service;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Customer.Controllers
 {
@@ -10,7 +11,11 @@ namespace Api.Customer.Controllers
         [Route("customerId")]
         public ActionResult<string> Get(int customerId)
         {
-            return Ok(new {customerId});
+            var customerService = new CustomerService();
+
+            var customer = customerService.GetCustomer(customerId);
+
+            return Ok(customer);
         }
     }
 }
