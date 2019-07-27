@@ -4,7 +4,10 @@ namespace Api.Customer.Service
 {
     public interface ICustomerService
     {
-        //        Domain.Customer GetCustomer(int customerId);
+        Task<int> CreateCustomer(Domain.Customer customer);
+
+        Task UpdateCustomer(Domain.Customer customer);
+
         Task<Domain.Customer> GetCustomer(int customerId);
     }
 }

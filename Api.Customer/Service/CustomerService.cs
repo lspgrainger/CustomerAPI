@@ -12,6 +12,16 @@ namespace Api.Customer.Service
             _customerRepository = customerRepository;
         }
 
+        public Task<int> CreateCustomer(Domain.Customer customer)
+        {
+            return _customerRepository.CreateCustomer(customer);
+        }
+
+        public Task UpdateCustomer(Domain.Customer customer)
+        {
+            return _customerRepository.UpdateCustomer(customer);
+        }
+
         public Task<Domain.Customer> GetCustomer(int customerId)
         {
             var customer = _customerRepository.GetCustomer(customerId);
