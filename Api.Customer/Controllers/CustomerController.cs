@@ -53,6 +53,5 @@ namespace Api.Customer.Controllers
             public int CustomerId { get; set; }
             public string Password { get; set; }
         }
-
     }
 }
