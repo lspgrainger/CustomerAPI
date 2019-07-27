@@ -1,15 +1,36 @@
-﻿namespace Api.Customer.Repository
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Core.Sql;
+using Dapper;
+
+namespace Api.Customer.Repository
 {
     public class CustomerRepository : ICustomerRepository
     {
-        public Domain.Customer GetCustomer(int customerId)
-        {
-            var customer = new Domain.Customer
-            {
-                CustomerId = customerId, Forename = "Liam", Surname = "Grainger", Password = "Password1234"
-            };
+        private readonly ISqlConnectionFactory _connectionFactory;
 
-            return customer;
+        public CustomerRepository(ISqlConnectionFactory connectionFactory)
+        {
+            _connectionFactory = connectionFactory;
+        }
+
+        public async Task<Domain.Customer> GetCustomer(int customerId)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var results = await connection.QueryAsync<Domain.Customer>(@"
+                    SELECT CustomerID, Forename, Surname, EmailAddress, Password
+                    FROM Customer
+                    WHERE CustomerID = @customerId
+                   ", new
+                {
+                    customerId
+                });
+
+                var customer = results.FirstOrDefault();
+
+                return customer;
+            }
         }
     }
 }

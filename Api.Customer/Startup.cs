@@ -1,5 +1,6 @@
 ﻿using Api.Customer.Repository;
 using Api.Customer.Service;
+using Core.Sql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +54,9 @@ namespace Api.Customer
         {
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+
+            var connectionString = Configuration["Database:ConnectionString"];
+            services.AddScoped<ISqlConnectionFactory>(cfgProvider => new SqlConnectionFactory(connectionString));
         }
 
         private void ConfigSwagger(IApplicationBuilder app)
@@ -65,6 +69,5 @@ namespace Api.Customer
                     $"{Configuration["Name"]} {Configuration["Version"]}");
             });
         }
-
     }
 }

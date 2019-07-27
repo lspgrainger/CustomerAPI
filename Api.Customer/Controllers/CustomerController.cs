@@ -23,7 +23,7 @@ namespace Api.Customer.Controllers
         {
             var customer = _customerService.GetCustomer(customerId);
 
-            return Ok(customer);
+            return Ok(customer.Result);
         }
     }
 }
