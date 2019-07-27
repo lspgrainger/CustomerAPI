@@ -9,5 +9,7 @@ namespace Api.Customer.Service
         Task UpdateCustomer(Domain.Customer customer);
 
         Task<Domain.Customer> GetCustomer(int customerId);
+
+        Task<Domain.Customer> GetCustomerWithValidatedPassword(int customerId, string password);
     }
 }

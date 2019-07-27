@@ -31,12 +31,18 @@ namespace Api.Customer.Service
             return customer;
         }
 
+        public async Task<Domain.Customer> GetCustomerWithValidatedPassword(int customerId, string enteredPassword)
+        {
+            var customer = await _customerRepository.GetCustomer(customerId);
+            var isCorrectPassword = Hashing.ValidatePassword(enteredPassword, customer.Password);
+            return isCorrectPassword ? customer : null;
+        }
+
         private static void HashCustomerPassword(Domain.Customer customer)
         {
             var salt = Hashing.GetRandomSalt();
             var hashedPassword = Hashing.HashPassword(customer.Password, salt);
             customer.Password = hashedPassword;
         }
-
     }
 }
