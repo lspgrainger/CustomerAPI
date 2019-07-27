@@ -22,7 +22,7 @@ namespace Api.Customer.Controllers
         public async Task<IActionResult> CreateCustomer([FromBody] Domain.Customer customer)
         {
             var customerId = await _customerService.CreateCustomer(customer);
-            return Ok(new {customerId});
+            return Ok(new { customerId });
         }
 
         [HttpPut]
@@ -34,18 +34,18 @@ namespace Api.Customer.Controllers
 
         [HttpGet]
         [Route("customerId")]
-        public ActionResult<string> Get(int customerId)
+        public async Task<ActionResult<string>> Get(int customerId)
         {
-            var customer = _customerService.GetCustomer(customerId);
-            return Ok(customer.Result);
+            var customer = await _customerService.GetCustomer(customerId);
+            return Ok(customer);
         }
 
         [HttpPost]
         [Route("login")]
-        public ActionResult<string> CustomerLogin([FromBody] LoginCredentials customer)
+        public async Task<ActionResult<string>> CustomerLogin([FromBody] LoginCredentials customer)
         {
-            var myCustomer = _customerService.GetCustomerWithValidatedPassword(customer.CustomerId, customer.Password);
-            return Ok(myCustomer.Result);
+            var myCustomer = await _customerService.GetCustomerWithValidatedPassword(customer.CustomerId, customer.Password);
+            return Ok(myCustomer);
         }
 
         public class LoginCredentials

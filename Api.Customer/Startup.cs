@@ -53,8 +53,10 @@ namespace Api.Customer
         {
             services.AddScoped<ICustomerService, CustomerService>();
 
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+
             var connectionString = Configuration["Database:ConnectionString"];
-            services.AddScoped<ICustomerRepository>(cfgProvider => new CustomerRepository(connectionString));
+            services.AddScoped<IDbConnectionFactory>(cfgProvider => new CustomerSQLiteDatabase(connectionString));
         }
 
         private void ConfigSwagger(IApplicationBuilder app)

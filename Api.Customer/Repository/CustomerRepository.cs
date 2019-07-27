@@ -7,38 +7,38 @@ namespace Api.Customer.Repository
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private readonly string _connectionString;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
-        public CustomerRepository(string connectionString)
+        public CustomerRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _connectionString = connectionString;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         public async Task<int> CreateCustomer(Domain.Customer customer)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = _dbConnectionFactory.CreateConnection())
             {
-                var result = await connection.ExecuteScalarAsync<int>(
+                var result = await connection.QueryAsync<int>(
                     @"
                     INSERT INTO Customer(Forename, Surname, EmailAddress, Password)
-                    VALUES(@Forename, @Surname, @EmailAddress, @Password)
+                    VALUES(@Forename, @Surname, @EmailAddress, @Password);
 
-                    SELECT SCOPE_IDENTITY() AS NewCustomerId;",
+                    SELECT last_insert_rowid()",
                     new
                     {
                         customer.Forename,
                         customer.Surname,
                         customer.EmailAddress,
                         customer.Password
-                    }).ConfigureAwait(false);
+                    });
 
-                return result;
+                return result.FirstOrDefault();
             }
         }
 
         public async Task UpdateCustomer(Domain.Customer customer)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = _dbConnectionFactory.CreateConnection())
             {
                 var results = await connection.ExecuteAsync(@"
                     UPDATE Customer
@@ -58,7 +58,7 @@ namespace Api.Customer.Repository
 
         public async Task<Domain.Customer> GetCustomer(int customerId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = _dbConnectionFactory.CreateConnection())
             {
                 var results = await connection.QueryAsync<Domain.Customer>(@"
                     SELECT CustomerID, Forename, Surname, EmailAddress, Password
