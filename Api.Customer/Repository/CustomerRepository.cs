@@ -1,22 +1,22 @@
-﻿using System.Linq;
+﻿using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
-using Core.Sql;
 using Dapper;
 
 namespace Api.Customer.Repository
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private readonly ISqlConnectionFactory _connectionFactory;
+        private readonly string _connectionString;
 
-        public CustomerRepository(ISqlConnectionFactory connectionFactory)
+        public CustomerRepository(string connectionString)
         {
-            _connectionFactory = connectionFactory;
+            _connectionString = connectionString;
         }
 
         public async Task<int> CreateCustomer(Domain.Customer customer)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = new SqlConnection(_connectionString))
             {
                 var result = await connection.ExecuteScalarAsync<int>(
                     @"
@@ -38,7 +38,7 @@ namespace Api.Customer.Repository
 
         public async Task UpdateCustomer(Domain.Customer customer)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = new SqlConnection(_connectionString))
             {
                 var results = await connection.ExecuteAsync(@"
                     UPDATE Customer
@@ -58,7 +58,7 @@ namespace Api.Customer.Repository
 
         public async Task<Domain.Customer> GetCustomer(int customerId)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            using (var connection = new SqlConnection(_connectionString))
             {
                 var results = await connection.QueryAsync<Domain.Customer>(@"
                     SELECT CustomerID, Forename, Surname, EmailAddress, Password
