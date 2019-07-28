@@ -31,7 +31,7 @@ namespace Api.Customer.Service
             return customer;
         }
 
-        public async Task<Domain.Customer> GetCustomerWithValidatedPassword(int customerId, string enteredPassword)
+        public async Task<Domain.Customer> LoginCustomer(int customerId, string enteredPassword)
         {
             var customer = await _customerRepository.GetCustomer(customerId);
             var isCorrectPassword = Hashing.ValidatePassword(enteredPassword, customer.Password);

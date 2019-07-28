@@ -13,7 +13,7 @@ namespace Api.Customer.UnitTests
             var hashedPassword = Hashing.HashPassword(correctPassword, Hashing.GetRandomSalt());
 
             //Act
-            var enteredPassword = correctPassword;
+            var enteredPassword = "password1234";
             var isValidPassword = Hashing.ValidatePassword(enteredPassword, hashedPassword);
 
             //Assert
@@ -48,18 +48,42 @@ namespace Api.Customer.UnitTests
         [TestCase("!password£$%^", "!password$$%^", false)]
         [TestCase("qu1ckbr0wnf0x!", "q u1ckbr0wnf0x!", false)]
         [TestCase("verylongpasswordtest1234567890!!!", "erylongpasswordtest1234567890!!!", false)]
-        public void OneWayPasswordHashing(string correctPassword, string enteredPassword, bool expectedResult)
+        public void ValidatePassword(string correctPassword, string enteredPassword, bool expectedResult)
         {
             //Arrange
-            //var correctPassword = "password1234";
             var hashedPassword = Hashing.HashPassword(correctPassword, Hashing.GetRandomSalt());
 
             //Act
-            //var enteredPassword = correctPassword;
             var isValidPassword = Hashing.ValidatePassword(enteredPassword, hashedPassword);
 
             //Assert
             Assert.AreEqual(isValidPassword, expectedResult);
         }
+
+        [Test]
+        [TestCase("password1111")]
+        [TestCase("password2222")]
+        [TestCase("password3333")]
+        [TestCase("!password£$%^")]
+        [TestCase("qu1ckbr0wnf0x!")]
+        [TestCase("verylongpasswordtest1234567890!!!")]
+        [TestCase("password1111")]
+        [TestCase("password2222")]
+        [TestCase("password3333")]
+        [TestCase("!password£$%^")]
+        [TestCase("qu1ckbr0wnf0x!")]
+        [TestCase("verylongpasswordtest1234567890!!!")]
+        public void OneWayPasswordHashing(string password)
+        {
+            //Arrange
+            var hashedPassword = Hashing.HashPassword(password, Hashing.GetRandomSalt());
+
+            //Act
+            var isValidPassword = Hashing.ValidatePassword(password, hashedPassword);
+
+            //Assert
+            Assert.IsTrue(isValidPassword);
+        }
+
     }
 }

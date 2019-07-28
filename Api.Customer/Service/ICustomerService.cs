@@ -10,6 +10,6 @@ namespace Api.Customer.Service
 
         Task<Domain.Customer> GetCustomer(int customerId);
 
-        Task<Domain.Customer> GetCustomerWithValidatedPassword(int customerId, string password);
+        Task<Domain.Customer> LoginCustomer(int customerId, string password);
     }
 }

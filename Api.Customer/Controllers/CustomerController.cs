@@ -2,6 +2,7 @@
 using Api.Customer.Repository;
 using Api.Customer.Service;
 using Microsoft.AspNetCore.Mvc;
+using static Api.Customer.Controllers.CustomerControllerDto;
 
 namespace Api.Customer.Controllers
 {
@@ -9,26 +10,24 @@ namespace Api.Customer.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly ICustomerRepository _customerRepository;
         private readonly ICustomerService _customerService;
 
-        public CustomerController(ICustomerService customerService, ICustomerRepository customerRepository)
+        public CustomerController(ICustomerService customerService)
         {
             _customerService = customerService;
-            _customerRepository = customerRepository;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCustomer([FromBody] Domain.Customer customer)
+        public async Task<IActionResult> CreateCustomer([FromBody] RequestCreate customer)
         {
-            var customerId = await _customerService.CreateCustomer(customer);
+            var customerId = await _customerService.CreateCustomer(MapToDomain(customer));
             return Ok(new { customerId });
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateCustomer([FromBody] Domain.Customer customer)
+        public async Task<IActionResult> UpdateCustomer([FromBody] RequestUpdate customer)
         {
-            await _customerService.UpdateCustomer(customer);
+            await _customerService.UpdateCustomer(MapToDomain(customer));
             return Ok();
         }
 
@@ -42,16 +41,10 @@ namespace Api.Customer.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<string>> CustomerLogin([FromBody] LoginCredentials customer)
+        public async Task<ActionResult<string>> CustomerLogin([FromBody] RequestLogin customer)
         {
-            var myCustomer = await _customerService.GetCustomerWithValidatedPassword(customer.CustomerId, customer.Password);
+            var myCustomer = await _customerService.LoginCustomer(customer.CustomerId, customer.Password);
             return Ok(myCustomer);
-        }
-
-        public class LoginCredentials
-        {
-            public int CustomerId { get; set; }
-            public string Password { get; set; }
         }
     }
 }
