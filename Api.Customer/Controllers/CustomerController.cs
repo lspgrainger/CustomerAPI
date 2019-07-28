@@ -18,10 +18,10 @@ namespace Api.Customer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCustomer([FromBody] RequestCreate customer)
+        public async Task<int> CreateCustomer([FromBody] RequestCreate customer)
         {
             var customerId = await _customerService.CreateCustomer(MapToDomain(customer));
-            return Ok(new { customerId });
+            return customerId;
         }
 
         [HttpPut]
@@ -33,18 +33,18 @@ namespace Api.Customer.Controllers
 
         [HttpGet]
         [Route("customerId")]
-        public async Task<ActionResult<string>> Get(int customerId)
+        public async Task<Domain.Customer> Get(int customerId)
         {
             var customer = await _customerService.GetCustomer(customerId);
-            return Ok(customer);
+            return customer;
         }
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<string>> CustomerLogin([FromBody] RequestLogin customer)
+        public async Task<Domain.Customer> CustomerLogin([FromBody] RequestLogin customer)
         {
             var myCustomer = await _customerService.LoginCustomer(customer.CustomerId, customer.Password);
-            return Ok(myCustomer);
+            return myCustomer;
         }
     }
 }
