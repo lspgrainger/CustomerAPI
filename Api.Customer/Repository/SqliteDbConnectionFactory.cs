@@ -19,9 +19,14 @@ namespace Api.Customer.Repository
 
         private void InitialiseCustomerDatabase(string sqliteDbConnectionString)
         {
-            //Data Source=c:\customerDb.sqlite;Version=3;
+            var customerDbFolder = "C:\\CustomerAPI";
             var matches = Regex.Match(sqliteDbConnectionString, @"Data Source=(?<sqlLiteFile>.*?);Version=3;");
             var customerDbFile = matches.Groups["sqlLiteFile"].Value;
+
+            if (!Directory.Exists(customerDbFolder))
+            {
+                Directory.CreateDirectory(customerDbFolder);
+            }
 
             if (!File.Exists(customerDbFile))
             {
